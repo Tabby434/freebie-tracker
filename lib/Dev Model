@@ -1,0 +1,15 @@
+class Dev(Base):
+    __tablename__ = 'devs'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+
+    freebies = relationship("Freebie", back_populates="dev")
+    companies = association_proxy("freebies", "company")
+
+    def received_one(self, item_name):
+        return any(f.item_name == item_name for f in self.freebies)
+
+    def give_away(self, dev, freebie):
+        if freebie in self.freebies:
+            freebie.dev = dev
